@@ -1,0 +1,16 @@
+# At baseline, ignore everything except Python scripts, markdown files, and this gitignore file.
+*
+!*/
+!Scripts/*.py
+!*.md
+!.gitignore
+.idea/*
+# Ignore local temp files
+_*
+~*
+# Also specifically ignore everything in the Supplementary Scripts directory (so those are always pulled fresh)
+Scripts/Supplementary-Scripts/*
+# Also make sure we sync the raw data that is not readily downloadable automatically from public repositories
+!Data/Emerson/Raw/H*tsv*
+!Data/immuneSIM/Raw/*tsv*
+!Data/VDJdb/Raw/vdjdb.slim.txt
