@@ -20,7 +20,7 @@ import matplotlib.ticker as ticker
 import seaborn as sns
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Jamie Heather'
 
 
@@ -297,7 +297,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.ylabel('Number of TCRs', fontweight='bold')
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'number-errors-NT-countplot.' +
-                        str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
+                        str(sz).replace('.', '-') + '.' + ext, dpi=300, bbox_inches='tight')
             plt.close('all')
 
             fig = plt.figure(figsize=(sz, sz))
@@ -308,7 +308,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.xlabel("")
             plt.ylabel('Number of TCRs', fontweight='bold')
             plt.savefig(out_dir + 'number-errors-AA-countplot.' +
-                        str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
+                        str(sz).replace('.', '-') + '.' + ext, dpi=300, bbox_inches='tight')
             plt.close('all')
 
             sns.catplot(data=res_dat, kind='bar', x='Run', hue='Type', y='Percent Residues Identical', height=sz,
@@ -447,7 +447,10 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                 plt.savefig(out_dir + 'relative-AA-error-hist-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
                 plt.close('all')
 
+            fxn.garbage_collection()
+
     plt.close('all')
+    fxn.garbage_collection()
 
     return all_dat
 
@@ -529,6 +532,8 @@ def plot_basic_stitch_stats(save_dir, plot_dat):
             plt.subplots_adjust(left=pad, bottom=pad)
             plt.savefig(save_dir + 'barplot-pc-stitched.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
             plt.close('all')
+
+            fxn.garbage_collection()
 
 
 # Set variables needed for this/replotting script
@@ -678,6 +683,8 @@ if __name__ == "__main__":
             plt.savefig(out_dir + 'percent-stitched-barplot-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
             plt.close('all')
 
+            fxn.garbage_collection()
+
     ####################################################################################################################
 
     # Then plot the next bit benchmarking: published sequences, Emerson AA/NT
@@ -708,6 +715,9 @@ if __name__ == "__main__":
             plt.savefig(out_dir + 'stripplot.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
             plt.close('all')
 
+            fxn.garbage_collection()
+
+
     ####################################################################################################################
 
     # Plot the basic benchmarking plots
@@ -717,6 +727,8 @@ if __name__ == "__main__":
     # Then the more elaborate ones
     heather_dat = plot_multi_modal(stitched_dir, fxn.proc_heather_dir, 'Heather', 'Heather',
                          'pre-stitchr-TCRs.tsv', 'inter_tag_seq')
+    del heather_dat  # Deleting for memory conservation, comment as needed
 
     immunesim_dat = plot_multi_modal(stitched_dir, fxn.proc_immunesim_dir, 'immuneSIM', 'immuneSIM',
                          'pre-stitchr-TCRs.tsv', 'sequence')
+    del immunesim_dat  # Deleting for memory conservation, comment as needed

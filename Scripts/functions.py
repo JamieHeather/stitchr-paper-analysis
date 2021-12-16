@@ -9,6 +9,7 @@ which in turn exists to run and plot analyses testing out the stitchr suite of T
 """
 
 import datetime
+import gc
 import gzip
 import os
 import subprocess
@@ -18,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 __author__ = 'Jamie Heather'
 
 
@@ -434,6 +435,14 @@ def run_bash(cmd):
     subprocess.call(cmd, shell=True)
 
 
+def garbage_collection():
+    """
+    Manual garbage collection
+    :return:
+    """
+    gc.collect()
+
+
 codons = {
     'AAA': 'K', 'AAC': 'N', 'AAG': 'K', 'AAT': 'N',
     'ACA': 'T', 'ACC': 'T', 'ACG': 'T', 'ACT': 'T',
@@ -485,7 +494,7 @@ proc_immunesim_dir = immunesim_dir + 'Processed/'
 supp_script_dir = 'Supplementary-Scripts/'
 
 exts = ['png']  # If desired additional plot types can be produced by changing this value
-sizes = [3.5, 4, 4.5, 5]  # Sizes of plots produced, for convenience when assembling figures
+sizes = [4, 4.5]  # Sizes of plots produced, for convenience when assembling figures
 
 gits = {'stitchr': 'https://github.com/JamieHeather/stitchr.git',
         'immunoseq2airr': 'https://github.com/JamieHeather/immunoseq2airr.git',

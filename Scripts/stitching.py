@@ -9,13 +9,12 @@ recording its timing as it does
 """
 
 import os
-import gc
 import subprocess
 import functions as fxn
 from datetime import datetime
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 __author__ = 'Jamie Heather'
 
 
@@ -108,7 +107,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
         # Output not yet zipped (to get accurate timing), so run that now (for space/downstream file expectations)
         subprocess.check_call(['gzip', out_path])  # TODO add force flag (-f)?
 
-        gc.collect()  # Force garbage collection to try to increase fairness of timing between iterations
+        fxn.garbage_collection()  # Force garbage collection to try to increase fairness of timing between iterations
 
         dat.append([bits[-3], bits[-2], cdr, out_nam, tcrs, stitched, rep, time_taken.total_seconds()])
 

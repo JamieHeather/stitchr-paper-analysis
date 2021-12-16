@@ -23,7 +23,7 @@ from copy import deepcopy
 from functions import *
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Jamie Heather'
 
 db_order = ['IMGT', 'IMGT+inferred']
@@ -36,20 +36,20 @@ if __name__ == "__main__":
     # Check re-run directory exists
     fxn.check_directory(fxn.rerun_heather_dir)
 
-    # Rerun autoDCR with the modified reference TCR files
-    print("\tAnnotating rearranged TCRs using autoDCR...")
-    fxn.run_bash("python3 " + fxn.supp_script_dir + "autoDCR/autoDCR.py -fq " + fxn.int_heather_dir +
-                 "HV_merged_combined.fasta.gz -o " + fxn.rerun_heather_dir +
-                 " -dd " + fxn.supp_script_dir + "autoDCR/ -jv -or forward -sp human-plus")
-
-    print("\tConverting to Thimble format")
-
-    full = prep.format_heather_data(fxn.rerun_heather_dir + 'HV_merged_combined.tsv.gz')
-    full.to_csv(fxn.rerun_heather_dir + 'pre-stitchr-TCRs.tsv.gz', compression='gzip', sep='\t')
-    prep.airr_to_stitchr(full, fxn.rerun_heather_dir, 'Heather', fxn.stitchr_headers, 'inter_tag_seq')
-
-    print("\tRunning thimble on re-processed data")
-    time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True, scripts_dir)
+    # # Rerun autoDCR with the modified reference TCR files
+    # print("\tAnnotating rearranged TCRs using autoDCR...")
+    # fxn.run_bash("python3 " + fxn.supp_script_dir + "autoDCR/autoDCR.py -fq " + fxn.int_heather_dir +
+    #              "HV_merged_combined.fasta.gz -o " + fxn.rerun_heather_dir +
+    #              " -dd " + fxn.supp_script_dir + "autoDCR/ -jv -or forward -sp human-plus")
+    #
+    # print("\tConverting to Thimble format")
+    #
+    # full = prep.format_heather_data(fxn.rerun_heather_dir + 'HV_merged_combined.tsv.gz')
+    # full.to_csv(fxn.rerun_heather_dir + 'pre-stitchr-TCRs.tsv.gz', compression='gzip', sep='\t')
+    # prep.airr_to_stitchr(full, fxn.rerun_heather_dir, 'Heather', fxn.stitchr_headers, 'inter_tag_seq')
+    #
+    # print("\tRunning thimble on re-processed data")
+    #time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True, scripts_dir)
 
     plt.rcParams.update({'font.size': 18, 'font.sans-serif': 'Arial', 'font.weight': 'bold',
                          'mathtext.fontset': 'custom', 'mathtext.it': 'Arial:italic', 'mathtext.rm': 'Arial',
@@ -59,6 +59,10 @@ if __name__ == "__main__":
 
     in_dat, stitched_dir = fxn.open_previous_data('stitched-rerun-results', 'timing_data', 'tsv')
     tidied_dat, renamed_dat, unused_sim_dat = plot.tidy_dat_columns(in_dat)
+    del tidied_dat
+    del unused_sim_dat
+    fxn.garbage_collection()
+
     plot.plot_basic_stitch_stats(fxn.sub_out_folder(plot.base_out_dir, 'benchmarking-heather-REPROCESS'), renamed_dat)
 
     rerun_dat = plot.plot_multi_modal(stitched_dir, fxn.rerun_heather_dir, 'Heather', 'Heather-HumanPlusReference',
@@ -204,7 +208,7 @@ if __name__ == "__main__":
         plt.close()
 
     # Find the sequences that are keeping us shy of 100% accuracy!
-    stubborn_errors = comparison_dat.loc[
+    persistent_errors = comparison_dat.loc[
         (comparison_dat['Run'] == 'SL200') &
         (comparison_dat['Residue'] == 'AA') &
         (comparison_dat['TCR database'] == 'IMGT+inferred') &
