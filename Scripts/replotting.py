@@ -31,8 +31,9 @@ db_order = ['IMGT', 'IMGT+inferred']
 
 if __name__ == "__main__":
 
+    scripts_dir = fxn.check_scripts_cwd()
+
     # Check re-run directory exists
-    fxn.check_scripts_cwd()
     fxn.check_directory(fxn.rerun_heather_dir)
 
     # Rerun autoDCR with the modified reference TCR files
@@ -48,7 +49,7 @@ if __name__ == "__main__":
     prep.airr_to_stitchr(full, fxn.rerun_heather_dir, 'Heather', fxn.stitchr_headers, 'inter_tag_seq')
 
     print("\tRunning thimble on re-processed data")
-    time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True)
+    time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True, scripts_dir)
 
     plt.rcParams.update({'font.size': 18, 'font.sans-serif': 'Arial', 'font.weight': 'bold',
                          'mathtext.fontset': 'custom', 'mathtext.it': 'Arial:italic', 'mathtext.rm': 'Arial',

@@ -16,24 +16,23 @@ import collections as coll
 import Levenshtein as lev
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Jamie Heather'
 
 
 def check_scripts_cwd():
     """
     Check we're in the right directory (Scripts)
-    :return: nothin
+    :return: path to scripts directory
     """
     if not os.getcwd().endswith('/Scripts'):
         if 'Scripts' in os.listdir(os.getcwd()):
             os.chdir('Scripts')
         else:
             raise IOError("Check your working directory: this is designed to be run from the parent or Scripts folders")
+    return os.getcwd() + '/'
 
 
 def opener(file_path, open_mode):

@@ -286,7 +286,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'variable-domain-length-kde.' +
                         str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             fig = plt.figure(figsize=(sz, sz))
             sns.countplot(data=all_dat, x='Run', hue='Number_Errors_NT', hue_order=error_bins,
@@ -298,7 +298,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'number-errors-NT-countplot.' +
                         str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             fig = plt.figure(figsize=(sz, sz))
             sns.countplot(data=all_dat, x='Run', hue='Number_Errors_AA', hue_order=error_bins,
@@ -309,7 +309,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.ylabel('Number of TCRs', fontweight='bold')
             plt.savefig(out_dir + 'number-errors-AA-countplot.' +
                         str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             sns.catplot(data=res_dat, kind='bar', x='Run', hue='Type', y='Percent Residues Identical', height=sz,
                         order=cdr3_order_plotting_full, palette=cdr3_palette)
@@ -320,7 +320,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'percent-residues-identical.' +
                         str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             fig = plt.figure(figsize=(sz, sz))
             g = sns.catplot(data=res_dat, kind='bar', x='Run', hue='Type', y='Percent TCRs Perfect', height=sz,
@@ -351,7 +351,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
 
             plt.savefig(out_dir + 'percent-TCRs-perfect-' + str(sz).replace('.', '-') + '.' + ext,
                         dpi=300)  #, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             nbins = 111         # 111 = about 1/3 of the average TCR length, so 1 bar = ~ 1 codon (easier to see)
             bw = 1/nbins
@@ -377,7 +377,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                 sns.despine(top=False, bottom=False, left=False, right=False)
                 plt.savefig(out_dir + 'relative-NT-error-hist-' + str(sz).replace('.', '-') + '.' + ext,
                             dpi=300)
-                plt.close()
+                plt.close('all')
 
                 bottom_hundredth = max_val / 100
 
@@ -399,7 +399,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                 sns.despine(top=False, bottom=False, left=False, right=False)
                 plt.savefig(out_dir + 'relative-NT-error-hist-zoom-' + str(sz).replace('.', '-') + '.' + ext,
                             dpi=300)
-                plt.close()
+                plt.close('all')
 
                 for r in runs:
 
@@ -421,7 +421,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                     sns.despine(top=False, bottom=False, left=False, right=False)
                     plt.savefig(out_dir + 'relative-NT-error-hist_' + r.replace('\n(', '-').replace(')', '') + '-'
                                 + str(sz).replace('.', '-') + '.' + ext, dpi=300)  #, bbox_inches='tight')
-                    plt.close()
+                    plt.close('all')
 
             if len(all_rel_pos_aa) > 0:
                 used_runs = [x for x in cdr3_order_plotting if x in list(set(all_rel_pos_aa['Run']))]
@@ -445,7 +445,7 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                 plt.rc('axes', linewidth=2)
                 sns.despine(top=False, bottom=False, left=False, right=False)
                 plt.savefig(out_dir + 'relative-AA-error-hist-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-                plt.close()
+                plt.close('all')
 
     plt.close('all')
 
@@ -463,35 +463,6 @@ def seamless_rename(in_df):
         replace('SL010', 'SL\n(10)').\
         replace('SL020', 'SL\n(20)').\
         replace('SL030', 'SL\n(30)')
-
-
-trac = 'ATATCCAGAACCCTGACCCTGCCGTGTACCAGCTGAGAGACTCTAAATCCAGTGACAAGTCTGTCTGCCTATTCACCGATTTTGATTCTCAAACAAATGTGTCACAAA' \
-       'GTAAGGATTCTGATGTGTATATCACAGACAAAACTGTGCTAGACATGAGGTCTATGGACTTCAAGAGCAACAGTGCTGTGGCCTGGAGCAACAAATCTGACTTTGCAT' \
-       'GTGCAAACGCCTTCAACAACAGCATTATTCCAGAAGACACCTTCTTCCCCAGCCCAGAAAGTTCCTGTGATGTCAAGCTGGTCGAGAAAAGCTTTGAAACAGATACGA' \
-       'ACCTAAACTTTCAAAACCTGTCAGTGATTGGGTTCCGAATCCTCCTCCTGAAAGTGGCCGGGTTTAATCTGCTCATGACGCTGCGGCTGTGGTCCAGCTG'
-trbc1 = 'AGGACCTGAACAAGGTGTTCCCACCCGAGGTCGCTGTGTTTGAGCCATCAGAAGCAGAGATCTCCCACACCCAAAAGGCCACACTGGTGTGCCTGGCCACAGGCTTC' \
-        'TTCCCCGACCACGTGGAGCTGAGCTGGTGGGTGAATGGGAAGGAGGTGCACAGTGGGGTCAGCACGGACCCGCAGCCCCTCAAGGAGCAGCCCGCCCTCAATGACTC' \
-        'CAGATACTGCCTGAGCAGCCGCCTGAGGGTCTCGGCCACCTTCTGGCAGAACCCCCGCAACCACTTCCGCTGTCAAGTCCAGTTCTACGGGCTCTCGGAGAATGACG' \
-        'AGTGGACCCAGGATAGGGCCAAACCCGTCACCCAGATCGTCAGCGCCGAGGCCTGGGGTAGAGCAGACTGTGGCTTTACCTCGGTGTCCTACCAGCAAGGGGTCCTG' \
-        'TCTGCCACCATCCTCTATGAGATCCTGCTAGGGAAGGCCACCCTGTATGCTGTGCTGGTCAGCGCCCTTGTGTTGATGGCCATGGTCAAGAGAAAGGATTTC'
-trbc2 = 'AGGACCTGAAAAACGTGTTCCCACCCGAGGTCGCTGTGTTTGAGCCATCAGAAGCAGAGATCTCCCACACCCAAAAGGCCACACTGGTGTGCCTGGCCACAGGCTTCT' \
-        'ACCCCGACCACGTGGAGCTGAGCTGGTGGGTGAATGGGAAGGAGGTGCACAGTGGGGTCAGCACAGACCCGCAGCCCCTCAAGGAGCAGCCCGCCCTCAATGACTCCA' \
-        'GATACTGCCTGAGCAGCCGCCTGAGGGTCTCGGCCACCTTCTGGCAGAACCCCCGCAACCACTTCCGCTGTCAAGTCCAGTTCTACGGGCTCTCGGAGAATGACGAGT' \
-        'GGACCCAGGATAGGGCCAAACCTGTCACCCAGATCGTCAGCGCCGAGGCCTGGGGTAGAGCAGACTGTGGCTTCACCTCCGAGTCTTACCAGCAAGGGGTCCTGTCTG' \
-        'CCACCATCCTCTATGAGATCTTGCTAGGGAAGGCCACCTTGTATGCCGTGCTGGTCAGTGCCCTCGTGCTGATGGCCATGGTCAAGAGAAAGGATTCCAGAGGC'
-
-base_out_dir = fxn.out_folder('plotting')
-tcr_range = [(1*10)**exp for exp in range(2, 7)]
-exp_tcr_range = [r"$10^{%1d}$" % x for x in range(2, 7)]
-time_range_m = [(1*10)**x for x in [-3, -2, -1, 0, 1]]
-cdr3_order = ['AA', 'NT', 'SL010', 'SL020', 'SL030', 'SL200']
-cdr3_order_plotting = ['AA', 'NT', 'SL\n(20)', 'SL\n(200)']
-cdr3_order_plotting_full = ['AA', 'NT', 'SL\n(10)', 'SL\n(20)', 'SL\n(30)', 'SL\n(200)']
-error_bins = ['0', '1-2', '3-5', '6+']
-res_order = ['NT', 'AA']
-chains = ['TRA', 'TRB']
-# Want to avoid the usual orange/blue, reserve for TRA/TRB
-cdr3_palette = [sns.color_palette('bright')[x] for x in range(len(sns.color_palette('bright'))) if x in [4, 7, 9]]
 
 
 def tidy_dat_columns(df_to_tidy):
@@ -545,7 +516,7 @@ def plot_basic_stitch_stats(save_dir, plot_dat):
             plt.xlabel('')
             plt.subplots_adjust(left=pad, bottom=pad)
             plt.savefig(save_dir + 'barplot-time-mins.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
 
             # and % stitched
             fig = plt.figure(figsize=(sz, sz))
@@ -557,12 +528,42 @@ def plot_basic_stitch_stats(save_dir, plot_dat):
             plt.xlabel('')
             plt.subplots_adjust(left=pad, bottom=pad)
             plt.savefig(save_dir + 'barplot-pc-stitched.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
+
+
+# Set variables needed for this/replotting script
+trac = 'ATATCCAGAACCCTGACCCTGCCGTGTACCAGCTGAGAGACTCTAAATCCAGTGACAAGTCTGTCTGCCTATTCACCGATTTTGATTCTCAAACAAATGTGTCACAAA' \
+       'GTAAGGATTCTGATGTGTATATCACAGACAAAACTGTGCTAGACATGAGGTCTATGGACTTCAAGAGCAACAGTGCTGTGGCCTGGAGCAACAAATCTGACTTTGCAT' \
+       'GTGCAAACGCCTTCAACAACAGCATTATTCCAGAAGACACCTTCTTCCCCAGCCCAGAAAGTTCCTGTGATGTCAAGCTGGTCGAGAAAAGCTTTGAAACAGATACGA' \
+       'ACCTAAACTTTCAAAACCTGTCAGTGATTGGGTTCCGAATCCTCCTCCTGAAAGTGGCCGGGTTTAATCTGCTCATGACGCTGCGGCTGTGGTCCAGCTG'
+trbc1 = 'AGGACCTGAACAAGGTGTTCCCACCCGAGGTCGCTGTGTTTGAGCCATCAGAAGCAGAGATCTCCCACACCCAAAAGGCCACACTGGTGTGCCTGGCCACAGGCTTC' \
+        'TTCCCCGACCACGTGGAGCTGAGCTGGTGGGTGAATGGGAAGGAGGTGCACAGTGGGGTCAGCACGGACCCGCAGCCCCTCAAGGAGCAGCCCGCCCTCAATGACTC' \
+        'CAGATACTGCCTGAGCAGCCGCCTGAGGGTCTCGGCCACCTTCTGGCAGAACCCCCGCAACCACTTCCGCTGTCAAGTCCAGTTCTACGGGCTCTCGGAGAATGACG' \
+        'AGTGGACCCAGGATAGGGCCAAACCCGTCACCCAGATCGTCAGCGCCGAGGCCTGGGGTAGAGCAGACTGTGGCTTTACCTCGGTGTCCTACCAGCAAGGGGTCCTG' \
+        'TCTGCCACCATCCTCTATGAGATCCTGCTAGGGAAGGCCACCCTGTATGCTGTGCTGGTCAGCGCCCTTGTGTTGATGGCCATGGTCAAGAGAAAGGATTTC'
+trbc2 = 'AGGACCTGAAAAACGTGTTCCCACCCGAGGTCGCTGTGTTTGAGCCATCAGAAGCAGAGATCTCCCACACCCAAAAGGCCACACTGGTGTGCCTGGCCACAGGCTTCT' \
+        'ACCCCGACCACGTGGAGCTGAGCTGGTGGGTGAATGGGAAGGAGGTGCACAGTGGGGTCAGCACAGACCCGCAGCCCCTCAAGGAGCAGCCCGCCCTCAATGACTCCA' \
+        'GATACTGCCTGAGCAGCCGCCTGAGGGTCTCGGCCACCTTCTGGCAGAACCCCCGCAACCACTTCCGCTGTCAAGTCCAGTTCTACGGGCTCTCGGAGAATGACGAGT' \
+        'GGACCCAGGATAGGGCCAAACCTGTCACCCAGATCGTCAGCGCCGAGGCCTGGGGTAGAGCAGACTGTGGCTTCACCTCCGAGTCTTACCAGCAAGGGGTCCTGTCTG' \
+        'CCACCATCCTCTATGAGATCTTGCTAGGGAAGGCCACCTTGTATGCCGTGCTGGTCAGTGCCCTCGTGCTGATGGCCATGGTCAAGAGAAAGGATTCCAGAGGC'
+
+plt.rcParams.update({'figure.max_open_warning': 0})
+base_out_dir = fxn.out_folder('plotting')
+tcr_range = [(1*10)**exp for exp in range(2, 7)]
+exp_tcr_range = [r"$10^{%1d}$" % x for x in range(2, 7)]
+time_range_m = [(1*10)**x for x in [-3, -2, -1, 0, 1]]
+cdr3_order = ['AA', 'NT', 'SL010', 'SL020', 'SL030', 'SL200']
+cdr3_order_plotting = ['AA', 'NT', 'SL\n(20)', 'SL\n(200)']
+cdr3_order_plotting_full = ['AA', 'NT', 'SL\n(10)', 'SL\n(20)', 'SL\n(30)', 'SL\n(200)']
+error_bins = ['0', '1-2', '3-5', '6+']
+res_order = ['NT', 'AA']
+chains = ['TRA', 'TRB']
+cdr3_palette = [sns.color_palette('bright')[x] for x in range(len(sns.color_palette('bright'))) if x in [4, 7, 9]]
 
 
 if __name__ == "__main__":
 
-    fxn.check_scripts_cwd()
+    scripts_dir = fxn.check_scripts_cwd()
 
     plt.rcParams.update({'font.size': 18, 'font.sans-serif': 'Arial', 'font.weight': 'bold',
                          'mathtext.fontset': 'custom', 'mathtext.it': 'Arial:italic', 'mathtext.rm': 'Arial',
@@ -612,7 +613,7 @@ if __name__ == "__main__":
             plt.ticklabel_format(style='scientific', axis='x', useOffset=False)
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'correlation-linear-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
 
             # Plot log
             fig = plt.figure(figsize=(sz, sz))
@@ -647,7 +648,7 @@ if __name__ == "__main__":
             plt.rc('axes', linewidth=2)
             plt.subplots_adjust(left=0.15)
             plt.savefig(out_dir + 'correlation-log-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
 
             # And plot the legend
             fig = plt.figure(figsize=(sz, sz))
@@ -663,7 +664,7 @@ if __name__ == "__main__":
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'correlation-legend-' + str(sz).replace('.', '-') + '.' + ext,
                         dpi=300, bbox_inches='tight')
-            plt.close()
+            plt.close('all')
 
             aa_mil = published_aa.loc[published_aa['# TCRs'] == 1e6]
             aa_mil = aa_mil.replace('VDJdb TRA', 'VDJdb\nTRA').replace('VDJdb TRB', 'VDJdb\nTRB')
@@ -675,7 +676,7 @@ if __name__ == "__main__":
             sns.despine(top=True, bottom=False, left=False, right=True)
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'percent-stitched-barplot-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
 
     ####################################################################################################################
 
@@ -705,7 +706,7 @@ if __name__ == "__main__":
             plt.xlabel('Number TCRs', fontweight='bold')
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'stripplot.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
-            plt.close()
+            plt.close('all')
 
     ####################################################################################################################
 

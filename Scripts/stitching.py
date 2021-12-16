@@ -27,15 +27,15 @@ def escape(path):
     return path.replace(' ', '\\ ').replace('(', '\\(').replace(')', '\\)')
 
 
-def run_thimble(list_of_dirs, output_dir_name, additional_genes):
+def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
     """
     :param list_of_dirs: list of directories in which to look for files to stitch
-    :param output_dir_name: name of directory that will be
+    :param output_dir_name: name of directory that results will be put in
     :param additional_genes: boolean as to whether to use the -xg flag during stitching
+    :param home_dir: home 'Scripts/' directory to return to
     :return:
     """
 
-    scripts_dir = os.getcwd() + '/'
     abs_paths = []
     for d in list_of_dirs:
         print('\t' + d)
@@ -45,7 +45,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes):
         dir_path = os.getcwd() + '/'
         for f in in_files:
             abs_paths.append(dir_path + f)
-        os.chdir(scripts_dir)
+        os.chdir(home_dir)
 
     abs_paths.sort()
     out_dir = fxn.out_folder(output_dir_name)
@@ -53,7 +53,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes):
     out_dir = os.getcwd() + '/'
 
     # And then move into the neighbouring stitchr directory to actually run the code
-    os.chdir(fxn.supp_script_dir + 'stitchr/Scripts/')
+    os.chdir(home_dir + fxn.supp_script_dir + 'stitchr/Scripts/')
 
     dat = []
     print("Running Thimble...")
@@ -106,7 +106,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes):
                 line_count += 1
 
         # Output not yet zipped (to get accurate timing), so run that now (for space/downstream file expectations)
-        subprocess.check_call(['gzip', out_path])
+        subprocess.check_call(['gzip', out_path])  # TODO add force flag (-f)?
 
         gc.collect()  # Force garbage collection to try to increase fairness of timing between iterations
 
@@ -118,7 +118,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes):
 
     dat.to_csv(out_dir + 'timing_data.tsv', sep='\t', index=False)
 
-    os.chdir(scripts_dir)
+    os.chdir(home_dir)
     return dat
 
     # TODO check gzip works (and deleted old one)
@@ -127,10 +127,10 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes):
 # Sort out the directory business:
 # define absolute paths to all of theoutput_dir_nameoutput_dir_name input files and the the output folder
 if __name__ == "__main__":
-    fxn.check_scripts_cwd()
+    scripts_dir = fxn.check_scripts_cwd()
 
     print("Finding input data...")
     in_dirs = [fxn.proc_heather_dir, fxn.proc_emerson_dir, fxn.proc_vdjdb_dir, fxn.proc_immunesim_dir,
                fxn.bench_emerson_dir, fxn.bench_vdjdb_dir]
 
-    thimble_dat = run_thimble(in_dirs, 'stitched-results', False)
+    thimble_dat = run_thimble(in_dirs, 'stitched-results', False, scripts_dir)

@@ -17,7 +17,7 @@ from copy import deepcopy
 from functions import *
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Jamie Heather'
 
 
@@ -379,7 +379,7 @@ if __name__ == "__main__":
     with fxn.opener('../README.md', 'r') as in_file:
         for line in in_file:
             if 'SRR' in line:
-                bits = line.rstrip().split(' ')
+                bits = [x for x in line.rstrip().split(' ') if x]
                 donor = bits[1]
                 chain = bits[3]
                 srr = bits[7]
@@ -390,7 +390,7 @@ if __name__ == "__main__":
 
                 # Rename the downloaded FASTQ, delete the pre-fetched SRA
                 os.rename(fxn.raw_heather_dir + srr + '.fastq.gz', fxn.raw_heather_dir + out_nam)
-                shutil.rmtree(srr)
+                # shutil.rmtree(srr)  # TODO rm
 
     # Then go through these FASTQs and stringently collapse into high-quality full-length read FASTA files
 
@@ -426,8 +426,8 @@ if __name__ == "__main__":
 
     # And assign TCRs with autoDCR
     print("\tAnnotating rearranged TCRs using autoDCR...")
-    fxn.run_bash("python3 Supplementary-Scripts/autoDCR/autoDCR.py -fq " + fxn.int_heather_dir \
-          + "HV_merged_combined.fasta.gz -o " + fxn.int_heather_dir + " -dd Supplementary-Scripts/ -or forward")
+    fxn.run_bash("python3 Supplementary-Scripts/autoDCR/autoDCR.py -jv -fq " + fxn.int_heather_dir \
+          + "HV_merged_combined.fasta.gz -o " + fxn.int_heather_dir + " -dd Supplementary-Scripts/autoDCR/ -or forward")
 
     print("\tConverting to Thimble format")
     full = format_heather_data(fxn.int_heather_dir + 'HV_merged_combined.tsv.gz')

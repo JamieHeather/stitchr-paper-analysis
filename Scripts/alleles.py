@@ -20,6 +20,7 @@ __version__ = '0.1.0'
 __author__ = 'Jamie Heather'
 
 if __name__ == "__main__":
+    scripts_dir = fxn.check_scripts_cwd()
 
     # First run autoDCR on each individual donor collapsed TCR repertoire
     dcr_dir = fxn.supp_script_dir + 'autoDCR/'
