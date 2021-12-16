@@ -36,20 +36,20 @@ if __name__ == "__main__":
     # Check re-run directory exists
     fxn.check_directory(fxn.rerun_heather_dir)
 
-    # # Rerun autoDCR with the modified reference TCR files
-    # print("\tAnnotating rearranged TCRs using autoDCR...")
-    # fxn.run_bash("python3 " + fxn.supp_script_dir + "autoDCR/autoDCR.py -fq " + fxn.int_heather_dir +
-    #              "HV_merged_combined.fasta.gz -o " + fxn.rerun_heather_dir +
-    #              " -dd " + fxn.supp_script_dir + "autoDCR/ -jv -or forward -sp human-plus")
-    #
-    # print("\tConverting to Thimble format")
-    #
-    # full = prep.format_heather_data(fxn.rerun_heather_dir + 'HV_merged_combined.tsv.gz')
-    # full.to_csv(fxn.rerun_heather_dir + 'pre-stitchr-TCRs.tsv.gz', compression='gzip', sep='\t')
-    # prep.airr_to_stitchr(full, fxn.rerun_heather_dir, 'Heather', fxn.stitchr_headers, 'inter_tag_seq')
-    #
-    # print("\tRunning thimble on re-processed data")
-    #time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True, scripts_dir)
+    # Rerun autoDCR with the modified reference TCR files
+    print("\tAnnotating rearranged TCRs using autoDCR...")
+    fxn.run_bash("python3 " + fxn.supp_script_dir + "autoDCR/autoDCR.py -fq " + fxn.int_heather_dir +
+                 "HV_merged_combined.fasta.gz -o " + fxn.rerun_heather_dir +
+                 " -dd " + fxn.supp_script_dir + "autoDCR/ -jv -or forward -sp human-plus")
+
+    print("\tConverting to Thimble format")
+
+    full = prep.format_heather_data(fxn.rerun_heather_dir + 'HV_merged_combined.tsv.gz')
+    full.to_csv(fxn.rerun_heather_dir + 'pre-stitchr-TCRs.tsv.gz', compression='gzip', sep='\t')
+    prep.airr_to_stitchr(full, fxn.rerun_heather_dir, 'Heather', fxn.stitchr_headers, 'inter_tag_seq')
+
+    print("\tRunning thimble on re-processed data")
+    time_dat = stitch.run_thimble([fxn.rerun_heather_dir], 'stitched-rerun-results', True, scripts_dir)
 
     plt.rcParams.update({'font.size': 18, 'font.sans-serif': 'Arial', 'font.weight': 'bold',
                          'mathtext.fontset': 'custom', 'mathtext.it': 'Arial:italic', 'mathtext.rm': 'Arial',
