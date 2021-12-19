@@ -8,22 +8,18 @@ Re-perform basic plotting after inferring novel allele in the Heather dataset
 """
 
 import os
-import shutil
 import collections as coll
 import functions as fxn
 import preparation as prep
 import plotting as plot
 import stitching as stitch
-import numpy as np
 import pandas as pd
-import random as rnd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from copy import deepcopy
 from functions import *
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __author__ = 'Jamie Heather'
 
 db_order = ['IMGT', 'IMGT+inferred']
@@ -197,10 +193,10 @@ if __name__ == "__main__":
                         plot_y = y_val + 5
                         txt_col = db_palette[db_pos]
                     else:
-                        plot_y = y_val - 11
+                        plot_y = y_val - 15
                         txt_col = 'white'
                     ax.text(x + offsets[db_pos], plot_y, round(y_val, 1), color=txt_col,
-                            ha="center", fontsize=12, rotation='vertical', horizontalalignment='center')
+                            ha="center", fontsize=14, rotation='vertical', horizontalalignment='center')
 
         plt.ylim([0, 100])
         plt.rc('axes', linewidth=2)
