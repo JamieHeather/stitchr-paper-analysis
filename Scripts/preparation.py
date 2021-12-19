@@ -17,7 +17,7 @@ from copy import deepcopy
 from functions import *
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __author__ = 'Jamie Heather'
 
 
@@ -390,7 +390,6 @@ if __name__ == "__main__":
 
                 # Rename the downloaded FASTQ, delete the pre-fetched SRA
                 os.rename(fxn.raw_heather_dir + srr + '.fastq.gz', fxn.raw_heather_dir + out_nam)
-                # shutil.rmtree(srr)  # TODO rm
 
     # Then go through these FASTQs and stringently collapse into high-quality full-length read FASTA files
 
