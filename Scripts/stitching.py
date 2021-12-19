@@ -14,7 +14,7 @@ import functions as fxn
 from datetime import datetime
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __author__ = 'Jamie Heather'
 
 
@@ -105,7 +105,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
                 line_count += 1
 
         # Output not yet zipped (to get accurate timing), so run that now (for space/downstream file expectations)
-        subprocess.check_call(['gzip', out_path])  # TODO add force flag (-f)?
+        subprocess.check_call('gzip -f ' + out_path, shell=True)  # NB will overwrite any same-named file in the dir
 
         fxn.garbage_collection()  # Force garbage collection to try to increase fairness of timing between iterations
 
@@ -119,8 +119,6 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
 
     os.chdir(home_dir)
     return dat
-
-    # TODO check gzip works (and deleted old one)
 
 
 # Sort out the directory business:
