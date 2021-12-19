@@ -8,7 +8,6 @@ Run the actual plotting that underlies the Stitchr manuscript.
 """
 
 
-import time
 import os
 import collections as coll
 import functions as fxn
@@ -18,15 +17,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import seaborn as sns
+import warnings
+warnings.filterwarnings("ignore")
+
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __author__ = 'Jamie Heather'
 
 
 def fix_line(line_in):
     """
-    :param line_in: Str line of TCR file to be sanitised 
+    :param line_in: Str line of TCR file to be sanitised
     :return: line_in as list split on tabs, but with quotation and return characters removed
     """
     return line_in.replace('\"','').rstrip().split('\t')
@@ -45,17 +47,17 @@ def fix_post_seq(post_seq, pre_seq_len):
 
 def get_stitchr_code(input_tcr):
     """
-    Function for manual QC checks of TCRs from different data formats generated during analysis 
+    Function for manual QC checks of TCRs from different data formats generated during analysis
     :param input_tcr: a TCR from one of the data structures they're stored in throughout this script
     :return: Nothing, but it prints text which can be supplied to run stitchr in the terminal
     """
     if isinstance(input_tcr, list):
-        print(' '.join(['python3 stitchr.py -v', input_tcr[1], 
-                        '-j', input_tcr[2], 
+        print(' '.join(['python3 stitchr.py -v', input_tcr[1],
+                        '-j', input_tcr[2],
                         '-cdr3', input_tcr[3]]))
     elif isinstance(input_tcr, pd.Series):
-        print(' '.join(['python3 stitchr.py -v', input_tcr['v_call'], 
-                        '-j', input_tcr['j_call'], 
+        print(' '.join(['python3 stitchr.py -v', input_tcr['v_call'],
+                        '-j', input_tcr['j_call'],
                         '-cdr3', input_tcr['junction']]))
     else:
         raise IOError("Type not covered.")
@@ -346,8 +348,12 @@ def plot_multi_modal(dir_to_thimble, dir_to_proc, file_prefix, out_dir_nam, comp
                     else:
                         plot_y = y_val - 15
                         txt_col = 'white'
-                    ax.text(x + offsets[res_pos], plot_y, round(y_val, 1), color=txt_col,
-                            ha="center", fontsize=12, rotation='vertical', horizontalalignment='center')
+                    if y_val == 100:
+                        txt_y = str(100)
+                    else:
+                        txt_y = round(y_val, 1)
+                    ax.text(x + offsets[res_pos], plot_y, txt_y, color=txt_col,
+                            ha="center", fontsize=14, rotation='vertical', horizontalalignment='center')
 
             plt.savefig(out_dir + 'percent-TCRs-perfect-' + str(sz).replace('.', '-') + '.' + ext,
                         dpi=300)  #, bbox_inches='tight')
@@ -512,7 +518,7 @@ def plot_basic_stitch_stats(save_dir, plot_dat):
             for x in range(len(x_order)):
                 row = plot_dat.loc[plot_dat['Provided CDR3'] == x_order[x]]
                 y_val = row['Time (min)'].iloc[0]
-                g.text(x, y_val + 0.1, round(row['Time (min)'].iloc[0], 1), color='black', ha="center")
+                g.text(x, y_val + 0.1, round(row['Time (min)'].iloc[0], 1), color='black', ha="center", fontsize=14)
 
             sns.despine(top=True, bottom=False, left=False, right=True)
             plt.ylabel('Run time (min)', fontweight='bold')
@@ -657,8 +663,8 @@ if __name__ == "__main__":
 
             # And plot the legend
             fig = plt.figure(figsize=(sz, sz))
-            g=sns.scatterplot(data=published_aa, x='# TCRs', y='Time (s)', hue='Source', style='Sampling',
-                              alpha=0, s=80, markers=['o', '^'], hue_order=ord)
+            g = sns.scatterplot(data=published_aa, x='# TCRs', y='Time (s)', hue='Source', style='Sampling',
+                                alpha=0, s=80, markers=['o', '^'], hue_order=ord)
             g.set_xticklabels([''])
             g.set_yticklabels([''])
             g.set_xticks([])
@@ -674,10 +680,13 @@ if __name__ == "__main__":
             aa_mil = published_aa.loc[published_aa['# TCRs'] == 1e6]
             aa_mil = aa_mil.replace('VDJdb TRA', 'VDJdb\nTRA').replace('VDJdb TRB', 'VDJdb\nTRB')
 
-            fig = plt.figure(figsize=(sz, sz))
+            fig = plt.figure(figsize=(sz*1.35, sz))
             sns.barplot(data=aa_mil, x='Source', y='% Stitched')
             sns.swarmplot(data=aa_mil, x='Source', y='% Stitched', edgecolor='black', linewidth=1, size=7)
+            plt.ylabel('% Stitched', fontweight='bold')
+            plt.xlabel('')
             plt.ylim([99.9, 100.01])
+            plt.subplots_adjust(left=0.24, bottom=0.17)
             sns.despine(top=True, bottom=False, left=False, right=True)
             plt.rc('axes', linewidth=2)
             plt.savefig(out_dir + 'percent-stitched-barplot-' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
@@ -695,9 +704,8 @@ if __name__ == "__main__":
 
     for ext in fxn.exts:
         for sz in fxn.sizes:
-            fig = plt.figure(figsize=(sz, sz))
-            sns.stripplot(data=emerson, x='# TCRs', y='Time (min)', hue='CDR3 input',
-                        order=tcr_range)
+            fig = plt.figure(figsize=(sz*1.1, sz))
+            sns.stripplot(data=emerson, x='# TCRs', y='Time (min)', hue='CDR3 input', order=tcr_range)
 
             ax = plt.gca()
             for tick in ax.xaxis.get_major_ticks():
@@ -707,16 +715,17 @@ if __name__ == "__main__":
                 tick.label1.set_fontweight('bold')
 
             plt.xticks(range(5), exp_tcr_range)
-            sns.despine(top=True, bottom=False, left=False, right=True)
+            # plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
             plt.yscale('log')
             plt.ylabel('Run time (min)', fontweight='bold')
             plt.xlabel('Number TCRs', fontweight='bold')
             plt.rc('axes', linewidth=2)
+            plt.subplots_adjust(left=0.23, bottom=0.18)
+            sns.despine(top=False, bottom=False, left=False, right=False)
             plt.savefig(out_dir + 'stripplot.' + str(sz).replace('.', '-') + '.' + ext, dpi=300)
             plt.close('all')
 
             fxn.garbage_collection()
-
 
     ####################################################################################################################
 
