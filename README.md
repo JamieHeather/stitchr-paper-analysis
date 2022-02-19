@@ -1,6 +1,6 @@
 # stitchr-paper-analysis
-## v 0.1.0
-### 2021, Jamie Heather, MGH
+## v 0.1.1
+### 2022, Jamie Heather, MGH
 
 This repo contains the raw data and scripts required to generate the plots for the Heather *et al.* manuscript describing [stitchr](https://github.com/JamieHeather/stitchr), the Python tool for generating full-length, coding T cell receptor (TCR) sequences out of the minimally-reported TCR V/J/CDR3 that is most often available.
 
@@ -143,4 +143,135 @@ Scripts then need to be executed in the following order:
 * `replotting.py`
   * This uses the various functions established in `stitching.py` and `plotting.py` to repeat the analysis and plotting of the Heather *et al*. data using the IMGT germline TCR gene reference supplemented with potential novel alleles detected by `alleles.py`.
 
+* `flowplotting.py`
+  * This simply uses the processed flow cytometry data contained in the `Data/TCR-Jurkat-flow-data.tsv` file to plot the TCR+ Jurkat cell activation data, as shown in Figure 2C. 
+  * It can be run on its own, as it doesn't use the output of any of the other scripts in the repo.
+
 Scripts need to be executed from inside the Scripts directory, as relative paths to there are used throughout. Everything needs to be run in Python3, and has been tested on >= 3.6.9. (Note that the `functions.py` script should not be directly executed, as it simply contains objects used by the other three scripts.)
+
+# `Stitchr` commands 
+
+These are the `stitchr` commands used for the low-throughput demonstrations of the `stitchr` tool in the manuscript describing its use.
+
+## Figure 1
+
+As featured in Figure 1F, these are the three commands that produce the sequences featured in Figure 1B-D. Note that as these are human TCRs the species flag does not need to be set:
+
+```bash
+# AA
+python3 stitchr.py -v TRBV7-6 -j TRBJ1-4 -cdr3 CASSSGQGLGEKLFF
+
+# NT
+python3 stitchr.py -v TRBV7-6 -j TRBJ1-4 -cdr3 TGTGCCAGCAGTTCCGGACAGGGCTTGGGAGAAAAACTGTTTTTT
+
+# SL-NT
+python3 stitchr.py -v TRBV7-6 -j TRBJ1-4 -cdr3 tcgcTGTGCCAGCAGTTCCGGACAGGGCTTGGGAGAAAAACTGTTTTTTggca -sl
+```
+
+## Figure 2 
+
+These commands produce the TCRs described in Supplementary Table 2/aligned to their PDB FASTA origins in Figure 2A/B, plus the additional TCR that was also experimentally validated in Figure 2C:
+
+```bash
+python3 stitchr.py -n C1-28_TRA -v TRAV8-3*01 -j TRAJ28*01 -cdr3 CAVGAPSGAGSYQLTF -l ATG 
+python3 stitchr.py -n KFJ5_TRA -v TRAV4*01 -j TRAJ21*01 -cdr3 CLVGEILDNFNKFYF -l ATG 
+python3 stitchr.py -n MAG-IC3_TRA -v TRAV21*02 -j TRAJ28*01 -cdr3 CAVRPGGAGPFFVVF -l ATG 
+python3 stitchr.py -n D2H_TRA -v TRAV9-2*01 -j TRAJ37*01 -cdr3 CALDSGNTGKLIF -l ATG 
+python3 stitchr.py -n LC13_TRA -v TRAV26-2*01 -j TRAJ52*01 -cdr3 CILPLAGGTSYGKLTF -l ATG 
+python3 stitchr.py -n C1-28_TRB -v TRBV4-1*01 -j TRBJ2-7*01 -cdr3 CASSPTSGIYEQYF -l ATG 
+python3 stitchr.py -n KFJ5_TRB -v TRBV28*01 -j TRBJ2-3*01 -cdr3 CASSQRQEGDTQYF -l ATG 
+python3 stitchr.py -n MAG-IC3_TRB -v TRBV5-1*01 -j TRBJ2-7*01 -cdr3 CASSFNMATGQYF -l ATG 
+python3 stitchr.py -n D2H_TRB -v TRBV11-2*01 -j TRBJ2-7*01 -cdr3 CASTTGGGGYEQYF -l ATG 
+python3 stitchr.py -n LC13_TRB -v TRBV7-8*01 -j TRBJ2-7*01 -cdr3 CASSLGQAYEQYF -l ATG 
+python3 stitchr.py -n modMAG-IC3_TRA -v TRAV21*02_mag-ic3 -j TRAJ28*01 -cdr3 CAVRPGGAGPFFVVF -l ATG -xg
+```
+
+Note that the last command which calls for a modified TRAV21 gene requires the following FASTA read to be added to the `Data/additional-genes.fasta` in the `stitchr` directory:
+```
+>X58736|TRAV21*02_mag-ic3|Homo sapiens|F|V-REGION|128..400|273 nt|1| | | | ||| |~VARIABLE
+aaacaggaggtgacacagattcctgcagctctgagtgtcccagaaggagaaaacttggtt
+ctcaactgcagtttcactgatagcgctatttacaacctccagtggtttaggcaggaccct
+gggaaaggtctcacatctctgttgTACGTGAGACCCTACcagagagagcaaacaagtgga
+agacttaatgcctcgctggataaatcatcaggacgtagtactttatacattgcagcttct
+cagcctggtgactcagccacctacctctgtgct
+```
+
+## Supplementary Figure 2
+
+These commands produce the TCRs demonstrating `stitchr`'s utility across all TCR loci, for all species for which IMGT currently has sufficient data. Note that constant regions have to be explicitly set for all non-human/non-mouse species (as these are hard-coded into `stitchr` for human and mice based on our expertise, and cannot be automatically inferred for any arbitrary species):
+
+```bash
+# 2A
+# Human g/d
+python3 stitchr.py -v TRGV5*01 -j TRGJ1*02 -cdr3 CATWAPNYYKKLF -c TRGC1*01 -s HUMAN -n Y00482
+python3 stitchr.py -v TRDV2*03 -j TRDJ1*01 -cdr3 CACDTLRTGGRLYTDKLIF -c TRDC*01 -s HUMAN -n X14547
+
+# 2B
+# Camel
+python3 stitchr.py -v TRBV26*01 -j TRBJ3-3*01 -cdr3 CASSESSYSGGISTDPLYF -c TRBC1*01 -s DROMEDARY -n LT837999
+python3 stitchr.py -v TRGV2*01 -j TRGJ2-2*01 -cdr3 CAAWETNKIF -c TRGC2*01_ABC -s DROMEDARY -n JF792665
+
+# Cat
+python3 stitchr.py -v TRGV2-2*01 -j TRGJ2-2*01 -cdr3 CAAWEARKVGYGWAHKVF -c TRGC2*01_AB -s CAT -n AM746386
+
+# Cow 
+# (note the use of a related gene's TRDV leader, as TRDV1S56 doesn't currently have a leader available in IMGT)
+python3 stitchr.py -v TRGV1-1*03 -j TRGJ4-2*01 -cdr3 CAVWGPRNYKKNF -c TRGC4*02_ABC -s COW -n D16131
+python3 stitchr.py -v TRDV1S56*01 -j TRDJ4*01 -cdr3 CALWKLPVGFTVGYNPLIF -c TRDC*01 -s COW -l TRDV1S5*01 -n D16113
+
+# Dog
+python3 stitchr.py -v TRAV9-6*01 -j TRAJ42*01 -cdr3 CALRDRGYYGGSQGRLIF -c TRAC*01 -s DOG -n M97511
+python3 stitchr.py -v TRBV20*01 -j TRBJ2-6*01 -cdr3 CGYLQGARYEQYF -c TRBC2*01 -s DOG -n M97510
+python3 stitchr.py -v TRGV2-1*01 -j TRGJ3-2*01 -cdr3 CAAWEALRHGWYNKVL -c TRGC3*01_A -s DOG -n AF079123
+
+# Dolphin
+python3 stitchr.py -v TRAV16*01 -j TRAJ54*01 -cdr3 CALGDLSLGSAGQKLVF -c TRAC*01 -s DOLPHIN -n LN610706
+python3 stitchr.py -v TRGV1*01 -j TRGJ2*01 -cdr3 CALWERLTHGKSVKVF -c TRGC*01 -s DOLPHIN -n HG328287
+
+# Mouse
+python3 stitchr.py -v TRAV13-1*01 -j TRAJ48*01 -cdr3 CAMNYGNEKITF -c TRAC*01 -s MOUSE -n FJ188407
+python3 stitchr.py -v TRBV20*01 -j TRBJ2-7*01  -cdr3 CGARRDWGSSYEQYF -c TRBC2*01 -s MOUSE -n Y17474
+python3 stitchr.py -v TRGV1*05 -j TRGJ4*01 -cdr3 CAVWISTSWVKIF -c TRGC4*01_AB -s MOUSE -n U07554
+python3 stitchr.py -v TRDV4*01 -j TRDJ2*01 -cdr3 SDIGGSSWDTRQMFF -c TRDC*01 -s MOUSE -n M26449
+
+# Macaque
+python3 stitchr.py -v TRAV2*01 -j TRAJ36*01 -cdr3 CAVRGGVNNLFF -c TRAC*01 -s RHESUS_MONKEY -n M87324
+python3 stitchr.py -v TRBV23-1*01 -j TRBJ2-3*01 -cdr3 CANKAEQAPRSPQYF -c TRBC2*01 -s RHESUS_MONKEY -n M87323
+
+# Pig
+python3 stitchr.py -v TRBV15*01 -j TRBJ3-3*01 -cdr3 CASSRGGTASTDPLYF -c TRBC3*01 -s PIG -n KF688960
+
+# Rabbit
+python3 stitchr.py -v TRGV1-1*03 -j TRGJ1*01 -cdr3 CAVWTKTQNVWIKIF -c TRGC*01_AB -s RABBIT -n D38134
+
+# Sheep
+python3 stitchr.py -v TRDV1-65*01 -j TRDJ4*01 -cdr3 CALSVPYAGVWGITDGIQNPLIF -c TRDC*01 -s SHEEP -n AJ005905
+```
+
+## Supplementary Figure 3
+
+These examples illustrate how `stitchr` can be applied to immunoglobulin loci, taking the different human loci/classes as examples. However due to somatic hypermutation and a relatively greater level of allelic polymorphism users must take care, as annotated germline genes will often not reflect the sequence they are aiming to replicate:
+
+```bash
+# Heavy chains
+python3 stitchr.py -v IGHV3-30-3*01 -j IGHJ4*02 -cdr3 CARLSPAGGFFDYW -c IGHM*01 -s HUMAN -n JQ304252
+python3 stitchr.py -v IGHV4-61*01 -j IGHJ3*02 -cdr3 CARITGDRGAFDIW -c IGHD*01 -s HUMAN -n AF262208
+python3 stitchr.py -v IGHV1-69*01 -j IGHJ3*02 -cdr3 CAREVVPTFRENAFDIW -c IGHG1*01 -s HUMAN -n MW177368
+python3 stitchr.py -v IGHV4-59*01 -j IGHJ5*02 -cdr3 CARGISWFDPW -c IGHE*01 -s HUMAN -n DQ005305
+
+# Light chains
+python3 stitchr.py -v IGKV3-20*01 -j IGKJ5*01 -cdr3 CQQYGTSRPITF -c IGKC*01 -s HUMAN -n BC032451
+python3 stitchr.py -v IGLV1-47*01 -j IGLJ3*02 -cdr3 CAAWDDSLSGWVF -c IGLC2*01 -s HUMAN -l IGLV1-47*02 -n AB064224
+```
+
+## Supplementary Figure 4
+
+These commands show an example illustration of how to use `stitchr` to perform rational TCR engineering. In this case, the DMF5 TCR's beta chain was produced spliced onto multiple different constant regions, added via use of the extra gene option (`-xg`), having added the relevant sequences to the `Data/additional-genes.fasta` file (which are supplied with `stitchr` by default):
+
+```bash
+python3 stitchr.py -n DMF5-wt -v TRBV6-4 -j TRBJ1-1 -cdr3 CASSLSFGTEAFF  
+python3 stitchr.py -n DMF5-TRAC -v TRBV6-4 -j TRBJ1-1 -cdr3 CASSLSFGTEAFF -c hTRAC -xg
+python3 stitchr.py -n DMF5-mTRBC1 -v TRBV6-4 -j TRBJ1-1 -cdr3 CASSLSFGTEAFF -c mTRBC1 -xg
+python3 stitchr.py -n DMF5-TRDC -v TRBV6-4 -j TRBJ1-1 -cdr3 CASSLSFGTEAFF -c hTRDC -xg
+python3 stitchr.py -n DMF5-TRGC1 -v TRBV6-4 -j TRBJ1-1 -cdr3 CASSLSFGTEAFF -c hTRGC1 -xg
+```
