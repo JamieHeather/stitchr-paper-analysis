@@ -14,7 +14,7 @@ import functions as fxn
 from datetime import datetime
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 __author__ = 'Jamie Heather'
 
 
@@ -23,7 +23,7 @@ def escape(path):
     :param path: A string containing a path to be handled by bash
     :return: a suitably escaped version of that path
     """
-    return path.replace(' ', '\\ ').replace('(', '\\(').replace(')', '\\)')
+    return path.replace(' ', '\\ ').replace('(', '\\(').replace(')', '\\)').replace('_', '\\_')
 
 
 def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
@@ -94,7 +94,8 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
         tcrs = 0  # Total number of TCRs input...
         stitched = 0  # ... and how many of those produced a stitched TCR
         out_path = out_dir + out_nam + '.tsv'
-        with fxn.opener(out_path, 'r') as in_file:
+
+        with fxn.opener(f, 'r') as in_file:
             line_count = 0
             for line in in_file:
                 if line_count > 0:  # Don't count header row
@@ -105,7 +106,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
                 line_count += 1
 
         # Output not yet zipped (to get accurate timing), so run that now (for space/downstream file expectations)
-        subprocess.check_call('gzip -f ' + out_path, shell=True)  # NB will overwrite any same-named file in the dir
+        subprocess.check_call('gzip -f ' + escape(out_path), shell=True)  # NB will overwrite any same-named file in the dir
 
         fxn.garbage_collection()  # Force garbage collection to try to increase fairness of timing between iterations
 
