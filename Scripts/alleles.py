@@ -16,7 +16,7 @@ import inferTCR as infer
 
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Jamie Heather'
 
 if __name__ == "__main__":
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     with open(dcr_dir + 'compiled-inferred.fasta', 'w') as out_file:
         for gene in seqs:
-            out_file.write(infer.imgt_fastafy(gene, seqs[gene], False))
+            out_file.write(infer.imgt_fastafy(gene + '~VARIABLE', seqs[gene], False))
 
     # Tidy up
     fxn.run_bash('tar cvfz allele-inference-files.tar.gz HV*; '
