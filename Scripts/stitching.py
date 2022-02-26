@@ -14,7 +14,7 @@ import functions as fxn
 from datetime import datetime
 
 __email__ = 'jheather@mgh.harvard.edu'
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __author__ = 'Jamie Heather'
 
 
@@ -123,7 +123,7 @@ def run_thimble(list_of_dirs, output_dir_name, additional_genes, home_dir):
 
 
 # Sort out the directory business:
-# define absolute paths to all of theoutput_dir_nameoutput_dir_name input files and the the output folder
+# define absolute paths to all of the input files and the output folder
 if __name__ == "__main__":
     scripts_dir = fxn.check_scripts_cwd()
 
