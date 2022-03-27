@@ -2,9 +2,7 @@
 ## v 0.1.1
 ### 2022, Jamie Heather, MGH
 
-This repo contains the raw data and scripts required to generate the plots for the Heather *et al.* manuscript describing [stitchr](https://github.com/JamieHeather/stitchr), the Python tool for generating full-length, coding T cell receptor (TCR) sequences out of the minimally-reported TCR V/J/CDR3 that is most often available.
-
-Note that this version of the repo details the analysis for the `Stitchr` manuscript **before peer review**.
+This repo contains the raw data and scripts required to generate the plots for the [Heather *et al.* 2022 publication in Nucleic Acids Research (DOI: 10.1093/nar/gkac190)](https://doi.org/10.1093/nar/gkac190), describing [stitchr](https://github.com/JamieHeather/stitchr), the Python tool for generating full-length, coding T cell receptor (TCR) sequences out of the minimally-reported TCR V/J/CDR3 that is most often available. 
 
 # Requirements
 
